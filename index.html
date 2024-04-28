@@ -64,38 +64,47 @@
     // Get the value after 'ref=' in the URL
     var refValue = getParameterByName('ref');
 
-    // Fetch the JSON file based on the ref value
-    fetch(refValue + '.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('File not found');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Extract data from the JSON
-            var title = data.title;
-            var reasons = data.reasons;
-            var outcome = data.outcome;
-            var date = new Date(data.until);
-            var now = new Date();
-            var daysLeft = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
+    if (!refValue) {
+        // If ref value is not found, display "Case Not Found"
+        document.getElementById('title').innerText = "Case Not Found";
+        document.getElementById('blacklistedUntil').innerText = "N/A";
+        document.getElementById('daysLeft').innerText = "N/A";
+        document.getElementById('reasons').innerText = "N/A";
+        document.getElementById('outcome').innerText = "N/A";
+    } else {
+        // Fetch the JSON file based on the ref value
+        fetch(refValue + '.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('File not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract data from the JSON
+                var title = data.title;
+                var reasons = data.reasons;
+                var outcome = data.outcome;
+                var date = new Date(data.until);
+                var now = new Date();
+                var daysLeft = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
 
-            // Update HTML elements with the fetched data
-            document.title = title;
-            document.getElementById('title').innerText = title;
-            document.getElementById('blacklistedUntil').innerText = "Blacklisted until: " + date.toLocaleDateString();
-            document.getElementById('daysLeft').innerText = daysLeft + " days left";
-            if (daysLeft <= 0) {
-                document.getElementById('daysLeft').innerText = "Blacklist over";
-            }
-            document.getElementById('reasons').innerText = reasons;
-            document.getElementById('outcome').innerText = outcome;
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            window.location.href = 'error.html'; // Redirect to error page
-        });
+                // Update HTML elements with the fetched data
+                document.title = title;
+                document.getElementById('title').innerText = title;
+                document.getElementById('blacklistedUntil').innerText = "Blacklisted until: " + date.toLocaleDateString();
+                document.getElementById('daysLeft').innerText = daysLeft + " days left";
+                if (daysLeft <= 0) {
+                    document.getElementById('daysLeft').innerText = "Blacklist over";
+                }
+                document.getElementById('reasons').innerText = reasons;
+                document.getElementById('outcome').innerText = outcome;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                window.location.href = 'error.html'; // Redirect to error page
+            });
+    }
 </script>
 
 </body>
