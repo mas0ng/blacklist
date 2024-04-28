@@ -73,7 +73,7 @@
         document.getElementById('outcome').innerText = "N/A";
     } else {
         // Fetch the JSON file based on the ref value
-        fetch('data/' + refValue + '.json')
+        fetch('https://blacklist.mas0ng.com/data/' + refValue + '.json')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('File not found');
@@ -102,6 +102,11 @@
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+                document.getElementById('title').innerText = "Case Not Found";
+                document.getElementById('blacklistedUntil').innerText = "N/A";
+                document.getElementById('daysLeft').innerText = "N/A";
+                document.getElementById('reasons').innerText = "N/A";
+                document.getElementById('outcome').innerText = "N/A";
             });
     }
 </script>
